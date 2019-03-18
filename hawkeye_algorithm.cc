@@ -3,10 +3,6 @@
 
 //Code for Hawkey configurations of 1 and 2 in Champsim
 #include "../inc/champsim_crc2.h"
-#include "hawkeye_predictor.h"
-#include "optgen.h"
-#include "helper_function.h"
-
 #include <map>
 
 #define NUM_CORE 1
@@ -16,6 +12,10 @@
 //3-bit RRIP counter
 #define MAXRRIP 7
 uint32_t rrip[LLC_SETS][LLC_WAYS];
+
+#include "hawkeye_predictor.h"
+#include "optgen.h"
+#include "helper_function.h"
 
 // initialize replacement state
 void InitReplacementState()
@@ -50,6 +50,12 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
     //     }
     // }
     // lru[set][way] = 0; // promote to the MRU position
+}
+
+// use this function to print out your own stats on every heartbeat 
+void PrintStats_Heartbeat()
+{
+
 }
 
 // use this function to print out your own stats at the end of simulation
