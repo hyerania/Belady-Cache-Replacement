@@ -8,31 +8,31 @@ using namespace std;
 
 struct optgen{
     vector<int> liveness_intervals;
-    int num_cache;
-    int access;
-    int cache_size;
+    uint64_t num_cache;
+    uint64_t access;
+    uint64_t cache_size;
 
-    void init(int size){
+    void init(uint64_t size){
         num_cache = 0;
         access = 0;
         cache_size = size;
         liveness_intervals.resize(OPTGEN_SIZE, 0);
     }
 
-    int get_optgen_hits(){
+    uint64_t get_optgen_hits(){
         return num_cache;
     }
 
-    void set_access(int val){
+    void set_access(uint64_t val){
         access++;
         liveness_intervals[val] = 0;
     }
 
-    void set_fetch(int val){
+    void set_fetch(uint64_t val){
         liveness_intervals[val] = 0;
     }
 
-    bool is_Cache(int val, int endVal){
+    bool is_Cache(uint64_t val, uint64_t endVal){
         bool cache = true;
         int count = endVal;
         while (count != val){
@@ -44,7 +44,7 @@ struct optgen{
         }
 
         if(cache){
-            int count = endVal;
+            count = endVal;
             while(count != val){
                 liveness_intervals[count]++;
                 count = (count+1) % liveness_intervals.size();
