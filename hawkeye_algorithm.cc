@@ -7,6 +7,8 @@
 #include "optgen.h"
 #include "helper_function.h"
 
+#include <map>
+
 #define NUM_CORE 1
 #define LLC_SETS NUM_CORE*2048
 #define LLC_WAYS 16
@@ -22,7 +24,7 @@ void InitReplacementState()
 
     for (int i=0; i<LLC_SETS; i++) {
         for (int j=0; j<LLC_WAYS; j++) {
-            rrip[i][j] = MAXHIT
+            rrip[i][j] = MAXRRIP
         }
     }
 
