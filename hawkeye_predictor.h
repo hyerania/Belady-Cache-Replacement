@@ -18,7 +18,7 @@ private:
 
 public:
 	bool get_prediction(uint64_t PC){
-		uint64_t result = CRC(PC) % PCMAP_SIZE
+		uint64_t result = CRC(PC) % PCMAP_SIZE;
 		if(PC_Map.find(result) != PC_Map.end() && PC_Map[result] < ((MAX_PCMAP+1)/2)){
 			return false;
 		}
