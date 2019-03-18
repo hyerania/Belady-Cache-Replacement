@@ -15,7 +15,7 @@
 
 //3-bit RRIP counter
 #define MAXRRIP 7
-uint32_t rrpv[LLC_SETS][LLC_WAYS];
+uint32_t rrip[LLC_SETS][LLC_WAYS];
 
 // initialize replacement state
 void InitReplacementState()
@@ -24,7 +24,7 @@ void InitReplacementState()
 
     for (int i=0; i<LLC_SETS; i++) {
         for (int j=0; j<LLC_WAYS; j++) {
-            rrpv[i][j] = MAXRRIP
+            rrip[i][j] = MAXRRIP;
         }
     }
 
