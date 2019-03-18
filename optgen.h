@@ -53,6 +53,6 @@ struct optgen{
         }
         return cache;
     }
-}
+};
 
 #endif
