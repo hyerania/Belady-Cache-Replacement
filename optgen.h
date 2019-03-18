@@ -7,7 +7,7 @@ using namespace std;
 #define OPTGEN_SIZE 128
 
 struct optgen{
-    vector<int> liveness_intervals;
+    vector<unsigned int> liveness_intervals;
     uint64_t num_cache;
     uint64_t access;
     uint64_t cache_size;
@@ -34,7 +34,7 @@ struct optgen{
 
     bool is_Cache(uint64_t val, uint64_t endVal){
         bool cache = true;
-        int count = endVal;
+        unsigned int count = endVal;
         while (count != val){
             if(liveness_intervals[count] >= cache_size){
                 cache = false;
