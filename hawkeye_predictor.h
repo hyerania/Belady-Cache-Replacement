@@ -7,16 +7,14 @@ using namespace std;
 #include "helper_function.h"
 
 #define MAX_PCMAP 31
-#define PCMAP_SIZE 2048
-// #define PCMAP_SIZE_BITS 11
-// #define PCMAP_SIZE (1<<SHCT_SIZE_BITS)
-
+#define PCMAP_SIZE 204
 
 class Hawkeye_Predictor{
 private:
 	map<uint64_t, int> PC_Map;
 
 public:
+	//Return prediction for PC Address
 	bool get_prediction(uint64_t PC){
 		uint64_t result = CRC(PC) % PCMAP_SIZE;
 		if(PC_Map.find(result) != PC_Map.end() && PC_Map[result] < ((MAX_PCMAP+1)/2)){
@@ -24,7 +22,7 @@ public:
 		}
 		return true;
 	}
-
+	
 	void increase(uint64_t PC){
 		uint64_t result = CRC(PC) % PCMAP_SIZE;
 		if(PC_Map.find(result) == PC_Map.end()){

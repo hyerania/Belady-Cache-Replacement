@@ -12,6 +12,7 @@ struct optgen{
     uint64_t access;
     uint64_t cache_size;
 
+    //Initialize values
     void init(uint64_t size){
         num_cache = 0;
         access = 0;
@@ -19,6 +20,7 @@ struct optgen{
         liveness_intervals.resize(OPTGEN_SIZE, 0);
     }
 
+    //Return number of hits
     uint64_t get_optgen_hits(){
         return num_cache;
     }
@@ -32,6 +34,7 @@ struct optgen{
         liveness_intervals[val] = 0;
     }
 
+    //Return if hit or miss
     bool is_Cache(uint64_t val, uint64_t endVal){
         bool cache = true;
         unsigned int count = endVal;
