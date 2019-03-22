@@ -17,6 +17,15 @@ uint32_t rrip[LLC_SETS][LLC_WAYS];
 #include "optgen.h"
 #include "helper_function.h"
 
+//Hawkeye predictors for demand and prefetch requests
+Hawkeye_Predictor* predictor_demand;    //2K entries, 5-bit counter per each entry
+Hawkeye_Predictor* predictor_prefetch;  //2K entries, 5-bit counter per each entry
+
+OPTgen optgen_occup_vector[LLC_SETS];   //64 vecotrs, 128 entries each
+
+//Sampler components tracking cache history
+vector<map<uint64_t, addr_info> cache_history_sampler;  //2800 entries, 4-bytes per each entry
+
 // initialize replacement state
 void InitReplacementState()
 {
