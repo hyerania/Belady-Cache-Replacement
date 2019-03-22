@@ -6,7 +6,7 @@ using namespace std;
 #include <vector>
 #define OPTGEN_SIZE 128
 
-struct optgen{
+struct OPTgen{
     vector<unsigned int> liveness_intervals;
     uint64_t num_cache;
     uint64_t access;
