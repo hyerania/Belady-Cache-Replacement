@@ -28,7 +28,6 @@ OPTgen optgen_occup_vector[LLC_SETS];   //64 vecotrs, 128 entries each
 bool prefetching[LLC_SETS][LLC_WAYS];
 
 //Sampler components tracking cache history
-#define SAMPLED_SET(set) (bits(set, 0 , 6) == bits(set, ((unsigned long long)log2(LLC_SETS) - 6), 6) )  //Helper function to sample 64 sets for each core
 #define SAMPLER_ENTRIES 2800
 #define SAMPLER_HIST 8
 #define SAMPLER_SETS SAMPLER_ENTRIES/SAMPLER_HIST
@@ -38,6 +37,11 @@ uint64_t sample_signature[LLC_SETS][LLC_WAYS];
 //History time
 #define TIMER_SIZE 1024
 uint64_t set_timer[LLC_SETS];   //64 sets, where 1 timer is used for every set
+
+//Mathmatical functions needed for sampling set
+#define bitmask(l) (((l) == 64) ? (unsigned long long)(-1LL) : ((1LL << (l))-1LL))
+#define bits(x, i, l) (((x) >> (i)) & bitmask(l))
+#define SAMPLED_SET(set) (bits(set, 0 , 6) == bits(set, ((unsigned long long)log2(LLC_SETS) - 6), 6) )  //Helper function to sample 64 sets for each core
 
 
 // Initialize replacement state
