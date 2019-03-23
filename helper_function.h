@@ -18,22 +18,30 @@ uint64_t CRC(uint64_t address){
 }
 
 //Information for each address
-struct history{
+struct HISTORY{
     uint64_t address;
     uint64_t PCval;
     uint32_t previousVal;
     uint32_t lru;
     bool prefetching;
 
-    //TODO: modify and test!
-    void init(unsigned int currentVal){
+    //TODO: modified and test!
+    void init(){
         PCval = 0;
         previousVal = 0;
         lru = 0;
         prefetching = false;
     }
 
-    void update(unsigned int currentVa, uint64_t PC, bool )
+    //TODO: modified and test!
+    void update(unsigned int currentVal, uint64_t PC){
+        previousVal = currentVal;
+        PCval = PC;
+    }
+
+    void is_prefetch(){
+        prefetching = true;
+    }
 };
 
 
