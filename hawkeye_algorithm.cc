@@ -30,7 +30,7 @@ bool prefetching[LLC_SETS][LLC_WAYS];
 #define SAMPLER_ENTRIES 2800
 #define SAMPLER_HIST 8
 #define SAMPLER_SETS SAMPLER_ENTRIES/SAMPLER_HIST
-vector<map<uint64_t, HISTORY> cache_history_sampler;  //2800 entries, 4-bytes per each entry
+vector<map<uint64_t, HISTORY>> cache_history_sampler;  //2800 entries, 4-bytes per each entry
 uint64_t sample_signature[LLC_SETS][LLC_WAYS];
 
 //History time
