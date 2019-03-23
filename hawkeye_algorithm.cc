@@ -126,9 +126,34 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
 
     //Only if we are using sampling sets for OPTgen
     if(SAMPLED_SET(set)){
-        //TODO
+        uint64_t currentVal = set_timer[set] % 128;
+        uint64_t sample_tag = CRC(paddr >> 12) % 256;
+        uint32_t sample_set = (paddr >> 6) % SAMPLER_SETS;
+
+        if((type != PREFETCH) && (cache_history_sampler[sample_set].find(sample_tag) != cache_history_sampler[sample_set].end())){
+             
+        }
+        else if(){
+
+        }
+        else{
+
+        }
+
+        //Retrieve Hawkeye's prediction for line
+        // bool prediction = predictor_demand->get_prediction(PC);
+        // if(type == PREFETCH){
+            // prediction = predictor_prefetch->get_prediction(PC);
+        // }
+        
+        //Update the sample with time and PC
+        cache_history_sampler[sample_set][sample_tag].update(set_timer[set], PC);
+        cache_history_sampler[sample_set][sample_tag].lru = 0;
+        set_timer[set] = (set_timer[set] + 1) % TIMER_SIZE;
+
     }
 
+    //Retrieve Hawkeye's prediction for line
     bool prediction = predictor_demand->get_prediction(PC);
     if(type == PREFETCH){
         prediction = predictor_prefetch->get_prediction(PC);
