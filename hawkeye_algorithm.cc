@@ -23,10 +23,22 @@ Hawkeye_Predictor* predictor_prefetch;  //2K entries, 5-bit counter per each ent
 
 OPTgen optgen_occup_vector[LLC_SETS];   //64 vecotrs, 128 entries each
 
-//Sampler components tracking cache history
-vector<map<uint64_t, addr_info> cache_history_sampler;  //2800 entries, 4-bytes per each entry
+//Prefectching
+bool prefetching[LLC_SETS][LLC_WAYS];
 
-// initialize replacement state
+//Sampler components tracking cache history
+#define SAMPLER_ENTRIES 2800
+#define SAMPLER_HIST 8
+#define SAMPLER_SETS SAMPLER_ENTRIES/SAMPLER_HIST
+vector<map<uint64_t, HISTORY> cache_history_sampler;  //2800 entries, 4-bytes per each entry
+uint64_t sample_signature[LLC_SETS][LLC_WAYS];
+
+//History time
+#define TIMER_SIZE 1024
+uint64_t set_timer[LLC_SETS];   //64 sets, where 1 timer is used for every set
+
+
+// Initialize replacement state
 void InitReplacementState()
 {
     cout << "Initialize Hawkeye replacement policy state" << endl;
