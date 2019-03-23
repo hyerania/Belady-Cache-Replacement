@@ -108,16 +108,58 @@ uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, u
 // Called on every cache hit and cache fill
 void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t paddr, uint64_t PC, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
-    // update lru replacement state
-    // for (uint32_t i=0; i<LLC_WAYS; i++) {
-    //     if (lru[set][i] < lru[set][way]) {
-    //         lru[set][i]++;
+    paddr = (paddr >> 6) << 6;
 
-    //         if (lru[set][i] == LLC_WAYS)
-    //             assert(0);
-    //     }
-    // }
-    // lru[set][way] = 0; // promote to the MRU position
+    //Ignore all types that are writebacks
+    if(type == WRITEBACK){
+        return;
+    }
+
+    if(type == PREFETCH){
+        if(!hit){
+            prefetching[set][way] = true;
+        }
+    }
+    else{
+        prefetching[set][way] = false;
+    }
+
+    //Only if we are using sampling sets for OPTgen
+    if(SAMPLED_SET(set)){
+        //TODO
+    }
+
+    bool prediction = predictor_demand->get_prediction(PC);
+    if(type == PREFETCH){
+        prediction = predictor_prefetch->get_prediction(PC);
+    }
+    
+    sample_signature[set][way] = PC;
+    //Fix RRIP counters with correct RRPVs and age accordingly
+    if(!prediction){
+        rrip[set][way] = MAXRRIP;
+    }
+    else{
+        rrip[set][way] = 0;
+        if(!hit){
+            //Verifying RRPV of lines has not saturated
+            bool isMaxVal = false;
+            for(uint32_t i = 0; i < LLC_WAYS; i++){
+                if(rrip[set][i] == MAXRRIP-1){
+                    isMaxVal = true;
+                }
+            }
+
+            //Aging cache-friendly lines that have not saturated
+            for(uint32_t i = 0; i < LLC_WAYS; i++){
+                if(!isMaxVal && rrip[set][i] < MAXRRIP-1){
+                    rrip[set][i]++;
+                }
+            }
+        }
+        rrip[set][way] = 0;
+    }
+
 }
 
 // Use this function to print out your own stats on every heartbeat 
