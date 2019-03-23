@@ -46,9 +46,22 @@ void InitReplacementState()
     for (int i=0; i<LLC_SETS; i++) {
         for (int j=0; j<LLC_WAYS; j++) {
             rrip[i][j] = MAXRRIP;
+            sample_signature[i][j] = 0;
+            prefetching[i][j] = false;
         }
+        set_timer[i] = 0;
+        optgen_occup_vector[i].init(LLC_WAYS-2);
     }
 
+    cache_history_sampler.resize(SAMPLER_SETS);
+    for(int i = 0; i < SAMPLER_SETS; i++){
+        cache_history_sampler[i].clear();
+    }
+
+    predictor_prefetch = new Hawkeye_Predictor();
+    predictor_demand = new Hawkeye_Predictor();
+
+    cout << "Finished initializing Hawkeye" << endl;
 }
 
 // Find replacement victim
