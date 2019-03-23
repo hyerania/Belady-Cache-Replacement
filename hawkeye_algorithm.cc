@@ -51,14 +51,14 @@ void InitReplacementState()
 
 }
 
-// find replacement victim
+// Find replacement victim
 // return value should be 0 ~ 15 or 16 (bypass)
 uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, uint64_t PC, uint64_t paddr, uint32_t type)
 {
     return 0;
 }
 
-// called on every cache hit and cache fill
+// Called on every cache hit and cache fill
 void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t paddr, uint64_t PC, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
     // update lru replacement state
@@ -73,13 +73,13 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
     // lru[set][way] = 0; // promote to the MRU position
 }
 
-// use this function to print out your own stats on every heartbeat 
+// Use this function to print out your own stats on every heartbeat 
 void PrintStats_Heartbeat()
 {
 
 }
 
-// use this function to print out your own stats at the end of simulation
+// Use this function to print out your own stats at the end of simulation
 void PrintStats()
 {
     int hits = 0;
