@@ -61,11 +61,11 @@ void InitReplacementState()
     predictor_prefetch = new Hawkeye_Predictor();
     predictor_demand = new Hawkeye_Predictor();
 
-    cout << "Finished initializing Hawkeye" << endl;
+    cout << "Finished initializing Hawkeye replacement policy state" << endl;
 }
 
 // Find replacement victim
-// return value should be 0 ~ 15 or 16 (bypass)
+// Return value should be 0 ~ 15 or 16 (bypass)
 uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, uint64_t PC, uint64_t paddr, uint32_t type)
 {
     return 0;
@@ -98,11 +98,11 @@ void PrintStats()
     int hits = 0;
     int access = 0;
     for(int i = 0; i < LLC_SETS; i++){
-        // access += a
-        access += 1;
+        hits += optgen_occup_vector[i].get_optgen_hits();
+        access += optgen_occup_vector[i].access;
     }
 
     cout<< "OPTGen Hits: " << hits << endl;
-    cout<< "OPTGEN Hit Rate: " << 100*((double)hits / (double)access )<< endl;
+    cout<< "OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 
 }
