@@ -4,6 +4,7 @@
 //Code for Hawkey configurations of 1 and 2 in Champsim
 #include "../inc/champsim_crc2.h"
 #include <map>
+#include <math.h>
 
 #define NUM_CORE 1
 #define LLC_SETS NUM_CORE*2048
@@ -27,6 +28,7 @@ OPTgen optgen_occup_vector[LLC_SETS];   //64 vecotrs, 128 entries each
 bool prefetching[LLC_SETS][LLC_WAYS];
 
 //Sampler components tracking cache history
+#define SAMPLED_SET(set) (bits(set, 0 , 6) == bits(set, ((unsigned long long)log2(LLC_SETS) - 6), 6) )  //Helper function to sample 64 sets for each core
 #define SAMPLER_ENTRIES 2800
 #define SAMPLER_HIST 8
 #define SAMPLER_SETS SAMPLER_ENTRIES/SAMPLER_HIST
@@ -68,7 +70,35 @@ void InitReplacementState()
 // Return value should be 0 ~ 15 or 16 (bypass)
 uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, uint64_t PC, uint64_t paddr, uint32_t type)
 {
-    return 0;
+    //Find the line with RRPV of 7 in that set
+    for(uint32_t i = 0; i < LLC_WAYS; i++){
+        if(rrip[set][i] == MAXRRIP){
+            return i;
+        }
+    }
+
+    //If no RRPV of 7, then we find next highest RRPV value (oldest cache-friendly line)
+    uint32_t max_rrpv = 0;
+    int32_t victim = -1;
+    for(uint32_t i = 0; i < LLC_WAYS; i++){
+        if(rrip[set][i] >= max_rrpv){
+            max_rrpv = rrip[set][i];
+            victim = i;
+        }
+    }
+
+    //Asserting that LRU victim is not -1
+    //Predictor will be trained negaively on evictions
+    if(SAMPLED_SET(set)){
+        if(prefetching[set][victim]){
+            predictor_prefetch->decrease(sample_signature[set][victim]);
+        }
+        else{
+            predictor_demand->decrease(sample_signature[set][victim]);
+        }
+    }
+
+    return victim;
 }
 
 // Called on every cache hit and cache fill
