@@ -35,7 +35,7 @@ struct OPTgen{
     }
 
     //Return if hit or miss
-    bool is_Cache(uint64_t val, uint64_t endVal){
+    bool is_cache(uint64_t val, uint64_t endVal){
         bool cache = true;
         unsigned int count = endVal;
         while (count != val){
