@@ -105,6 +105,15 @@ uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, u
     return victim;
 }
 
+//Helper function for "UpdateReplacementState" to update cache history
+void update_cache_history(unsigned int sample_set, unsigned int currentVal){
+    for(map<uint64_t, HISTORY>::iterator it = cache_history_sampler[sample_set].begin(); it != cache_history_sampler[sample_set].end(); it++){
+        if((it->second).lru < currentVal){
+            (it->second).lru++;
+        }
+    }
+}
+
 // Called on every cache hit and cache fill
 void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t paddr, uint64_t PC, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
@@ -288,15 +297,4 @@ void PrintStats()
     cout<< "Final OPTGen Hits: " << hits << endl;
     cout<< "Final OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 
-}
-
-
-/* HELPER FUNCTIONS */
-//Update cache history
-void update_cache_history(unsigned int sample_set, unsigned int currentVal){
-    for(map<uint64_t, HISTORY>::iterator it = cache_history_sampler[sample_set].begin(); it != cache_history_sampler[sample_set].end(); it++){
-        if((it->second).lru < currentVal){
-            (it->second).lru++;
-        }
-    }
 }
