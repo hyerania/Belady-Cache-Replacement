@@ -44,5 +44,13 @@ struct HISTORY{
     }
 };
 
+//Update cache history
+void update_cache_history(unsigned int sample_set, unsigned int currentVal){
+    for(map<uint64_t, HISTORY>::iterator it = cache_history_sampler[sample_set].begin(); it != cache_history_sampler[sample_set].end(); it++){
+        if((it->second).lru < currentVal){
+            (it->second).lru++;
+        }
+    }
+}
 
 #endif
