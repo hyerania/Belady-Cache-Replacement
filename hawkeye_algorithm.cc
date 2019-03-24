@@ -168,7 +168,14 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
         else if(cache_history_sampler[sample_set].find(sample_tag) == cache_history_sampler[sample_set].end()){
             //If sampling, find victim from cache
             if(cache_history_sampler[sample_set].size() == SAMPLER_HIST){
-                //TODO: Replace history
+                //Replace the element in the cache history
+                uint64_t addr_val = 0;
+                for(map<uint64_t, HISTORY>::iterator it = cache_history_sampler[sample_set].begin(); it != cache_history_sampler[sample_set].end(); it++){
+                    if((it->second).lru == (SAMPLER_HIST-1)){
+                        addr_val = it->first;
+                        break;
+                    }
+                }
             }
 
             //Create new entry
