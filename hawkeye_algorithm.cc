@@ -1,7 +1,6 @@
-//      Hawkeye with Belady's Algorithm   //
-//             Replacement Policy         //
+/*  Hawkeye with Belady's Algorithm Replacement Policy
+    Code for Hawkeye configurations of 1 and 2 in Champsim */
 
-//Code for Hawkey configurations of 1 and 2 in Champsim
 #include "../inc/champsim_crc2.h"
 #include <map>
 #include <math.h>
@@ -136,7 +135,7 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
 
     //Only if we are using sampling sets for OPTgen
     if(SAMPLED_SET(set)){
-        uint64_t currentVal = set_timer[set] % 128;
+        uint64_t currentVal = set_timer[set] % OPTGEN_SIZE;
         uint64_t sample_tag = CRC(paddr >> 12) % 256;
         uint32_t sample_set = (paddr >> 6) % SAMPLER_SETS;
 
@@ -194,8 +193,8 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
             cache_history_sampler[sample_set][sample_tag].init();
             //If preftech, mark it as a prefetching or if not, just set the demand access
             if(type == PREFETCH){
-                cache_history_sampler[sample_set][sample_tag].is_prefetch();
-                optgen_occup_vector[set].set_fetch(currentVal);
+                cache_history_sampler[sample_set][sample_tag].set_prefetch();
+                optgen_occup_vector[set].set_prefetch(currentVal);
             }
             else{
                 optgen_occup_vector[set].set_access(currentVal);
@@ -217,8 +216,8 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
                     }
                 }
             }
-            cache_history_sampler[sample_set][sample_tag].is_prefetch();
-            optgen_occup_vector[set].set_fetch(currentVal);
+            cache_history_sampler[sample_set][sample_tag].set_prefetch();
+            optgen_occup_vector[set].set_prefetch(currentVal);
             //Update cache history
             update_cache_history(sample_set, cache_history_sampler[sample_set][sample_tag].lru);
 
