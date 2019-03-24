@@ -30,7 +30,7 @@ struct OPTgen{
         liveness_intervals[val] = 0;
     }
 
-    void set_fetch(uint64_t val){
+    void set_prefetch(uint64_t val){
         liveness_intervals[val] = 0;
     }
 
