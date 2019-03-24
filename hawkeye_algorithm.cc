@@ -159,7 +159,8 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
             }
             
             optgen_occup_vector[set].set_access(currentVal);
-            //TODO: Update history
+            //Update cache history
+            update_cache_history(sample_set, cache_history_sampler[sample_set][sample_tag].lru);
 
             //Mark prefetching as false since demand access
             cache_history_sampler[sample_set][sample_tag].prefetching = false;
@@ -189,7 +190,8 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
                 optgen_occup_vector[set].set_access(currentVal);
             }
 
-            //TODO: Update History
+            //Update cache history
+            update_cache_history(sample_set, SAMPLER_HIST-1);
         }
         //If line is neither of the two above options, then it is a prefetch line
         else{
@@ -206,7 +208,8 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
             }
             cache_history_sampler[sample_set][sample_tag].is_prefetch();
             optgen_occup_vector[set].set_fetch(currentVal);
-            //TODO: update history
+            //Update cache history
+            update_cache_history(sample_set, cache_history_sampler[sample_set][sample_tag].lru);
 
         }
 
