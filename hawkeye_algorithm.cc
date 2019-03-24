@@ -130,16 +130,80 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
         uint64_t sample_tag = CRC(paddr >> 12) % 256;
         uint32_t sample_set = (paddr >> 6) % SAMPLER_SETS;
 
+        //If line has been used before, ignoring prefetching (demand access operation)
         if((type != PREFETCH) && (cache_history_sampler[sample_set].find(sample_tag) != cache_history_sampler[sample_set].end())){
-             
-        }
-        else if(){
+            unsigned int current_time = set_timer[set];
+            if(current_time < cache_history_sampler[sample_set][sample_tag].previousVal){
+                current_time += TIMER_SIZE;
+            }
+            uint64_t previousVal = cache_history_sampler[sample_set][sample_tag].previousVal % OPTGEN_SIZE;
+            bool isWrap = (current_time - cache_history_sampler[sample_set][sample_tag].previousVal) > OPTGEN_SIZE;
 
+            //Train predictor positvely for last PC value that was prefetched
+            if(!isWrap && optgen_occup_vector[set].is_cache(currentVal, previousVal)){
+                if(cache_history_sampler[sample_set][sample_tag].prefetching){
+                    predictor_prefetch->increase(cache_history_sampler[sample_set][sample_tag].PCval);
+                }
+                else{
+                    predictor_demand->increase(cache_history_sampler[sample_set][sample_tag].PCval);
+                }
+            }
+            //Train predictor negatively since OPT did not cache this line
+            else{
+                if(cache_history_sampler[sample_set][sample_tag].prefetching){
+                    predictor_prefetch->decrease(cache_history_sampler[sample_set][sample_tag].PCval);
+                }
+                else{
+                    predictor_demand->decrease(cache_history_sampler[sample_set][sample_tag].PCval);
+                }
+            }
+            
+            optgen_occup_vector[set].set_access(currentVal);
+            //TODO: Update history
+
+            //Mark prefetching as false since demand access
+            cache_history_sampler[sample_set][sample_tag].prefetching = false;
         }
+        //If line has not been used before, mark as prefetch or demand
+        else if(cache_history_sampler[sample_set].find(sample_tag) == cache_history_sampler[sample_set].end()){
+            //If sampling, find victim from cache
+            if(cache_history_sampler[sample_set].size() == SAMPLER_HIST){
+                //TODO: Replace history
+            }
+
+            //Create new entry
+            cache_history_sampler[sample_set][sample_tag].init();
+            //If preftech, mark it as a prefetching or if not, just set the demand access
+            if(type == PREFETCH){
+                cache_history_sampler[sample_set][sample_tag].is_prefetch();
+                optgen_occup_vector[set].set_fetch(currentVal);
+            }
+            else{
+                optgen_occup_vector[set].set_access(currentVal);
+            }
+
+            //TODO: Update History
+        }
+        //If line is neither of the two above options, then it is a prefetch line
         else{
+            uint64_t previousVal = cache_history_sampler[sample_set][sample_tag].previousVal % OPTGEN_SIZE;
+            if(set_timer[set] - cache_history_sampler[sample_set][sample_tag].previousVal < 5*NUM_CORE){
+                if(optgen_occup_vector[set].is_cache(currentVal, previousVal)){
+                    if(cache_history_sampler[sample_set][sample_tag].prefetching){
+                        predictor_prefetch->increase(cache_history_sampler[sample_set][sample_tag].PCval);
+                    }
+                    else{
+                        predictor_demand->increase(cache_history_sampler[sample_set][sample_tag].PCval);
+                    }
+                }
+            }
+            cache_history_sampler[sample_set][sample_tag].is_prefetch();
+            optgen_occup_vector[set].set_fetch(currentVal);
+            //TODO: update history
 
         }
 
+        //TODO: Modifed and test
         //Retrieve Hawkeye's prediction for line
         // bool prediction = predictor_demand->get_prediction(PC);
         // if(type == PREFETCH){
@@ -190,7 +254,15 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
 // Use this function to print out your own stats on every heartbeat 
 void PrintStats_Heartbeat()
 {
+    int hits = 0;
+    int access = 0;
+    for(int i = 0; i < LLC_SETS; i++){
+        hits += optgen_occup_vector[i].get_optgen_hits();
+        access += optgen_occup_vector[i].access;
+    }
 
+    cout<< "OPTGen Hits: " << hits << endl;
+    cout<< "OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 }
 
 // Use this function to print out your own stats at the end of simulation
@@ -203,7 +275,7 @@ void PrintStats()
         access += optgen_occup_vector[i].access;
     }
 
-    cout<< "OPTGen Hits: " << hits << endl;
-    cout<< "OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
+    cout<< "Final OPTGen Hits: " << hits << endl;
+    cout<< "Final OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 
 }
