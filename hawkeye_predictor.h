@@ -8,8 +8,6 @@ using namespace std;
 
 #define MAX_PCMAP 31
 #define PCMAP_SIZE 2048
-// #define PCMAP_SIZE_BITS 11
-// #define PCMAP_SIZE (1<<SHCT_SIZE_BITS)
 
 class Hawkeye_Predictor{
 private:

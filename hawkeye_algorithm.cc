@@ -222,20 +222,11 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
             //Update cache history
             update_cache_history(sample_set, cache_history_sampler[sample_set][sample_tag].lru);
 
-        }
-
-        //TODO: Modifed and test
-        //Retrieve Hawkeye's prediction for line
-        // bool prediction = predictor_demand->get_prediction(PC);
-        // if(type == PREFETCH){
-            // prediction = predictor_prefetch->get_prediction(PC);
-        // }
-        
+        }   
         //Update the sample with time and PC
         cache_history_sampler[sample_set][sample_tag].update(set_timer[set], PC);
         cache_history_sampler[sample_set][sample_tag].lru = 0;
         set_timer[set] = (set_timer[set] + 1) % TIMER_SIZE;
-
     }
 
     //Retrieve Hawkeye's prediction for line

@@ -25,7 +25,6 @@ struct HISTORY{
     uint32_t lru;
     bool prefetching;
 
-    //TODO: modified and test!
     void init(){
         PCval = 0;
         previousVal = 0;
@@ -33,7 +32,6 @@ struct HISTORY{
         prefetching = false;
     }
 
-    //TODO: modified and test!
     void update(unsigned int currentVal, uint64_t PC){
         previousVal = currentVal;
         PCval = PC;
