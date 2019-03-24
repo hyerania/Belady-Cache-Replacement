@@ -112,6 +112,7 @@ void update_cache_history(unsigned int sample_set, unsigned int currentVal){
             (it->second).lru++;
         }
     }
+
 }
 
 // Called on every cache hit and cache fill
@@ -186,6 +187,7 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
                         break;
                     }
                 }
+                cache_history_sampler[sample_set].erase(addr_val);
             }
 
             //Create new entry
