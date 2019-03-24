@@ -37,7 +37,7 @@ struct HISTORY{
         PCval = PC;
     }
 
-    void is_prefetch(){
+    void set_prefetch(){
         prefetching = true;
     }
 };
