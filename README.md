@@ -23,3 +23,12 @@ Using Belady's algorithm for improved cache replacement policy
     ```
     ./lru-config1 -warmup_instructions NUM_INSTRUCTIONS -simulation instructions NUM_INSTRUCTIONS -traces trace/FILE_NAME.trace.gz
     ```
+
+## SPEC 2006 Benchmarks
+- In order to use the CRC2 simulation, the traces for the benchmarks must have the following extension: ```.trace.gz```.
+- The following [link](https://www.dropbox.com/sh/pgmnzfr3hurlutq/AACciuebRwSAOzhJkmj5SEXBa/CRC2_trace?dl=0&subfolder_nav_tracking=1) contains all the benchmarks for SPEC 2006 for proper use with the CRC2. However, the extension is ```.trace.xz```.
+- In order to get the proper extension:
+  - Extract the ```.trace.xz``` using a file compression tool, in our case we used 7-Zip.
+  - After extraction, the extension of the file should be ```.trace```.
+  - Compress the file to a ```.gz``` format using the same compression tool.
+  - Use the final trace file in the command lines provided to run the simulator.
