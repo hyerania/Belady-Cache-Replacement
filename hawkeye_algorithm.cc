@@ -265,15 +265,15 @@ void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t 
 // Use this function to print out your own stats on every heartbeat 
 void PrintStats_Heartbeat()
 {
-    int hits = 0;
-    int access = 0;
-    for(int i = 0; i < LLC_SETS; i++){
-        hits += optgen_occup_vector[i].get_optgen_hits();
-        access += optgen_occup_vector[i].access;
-    }
+    // int hits = 0;
+    // int access = 0;
+    // for(int i = 0; i < LLC_SETS; i++){
+    //     hits += optgen_occup_vector[i].get_optgen_hits();
+    //     access += optgen_occup_vector[i].access;
+    // }
 
-    cout<< "OPTGen Hits: " << hits << endl;
-    cout<< "OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
+    // cout<< "OPTGen Hits: " << hits << endl;
+    // cout<< "OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 }
 
 // Use this function to print out your own stats at the end of simulation
@@ -287,6 +287,7 @@ void PrintStats()
     }
 
     cout<< "Final OPTGen Hits: " << hits << endl;
+    cout<< "Final OPTGen Access: " << access << endl
     cout<< "Final OPTGEN Hit Rate: " << 100 * ( (double)hits/(double)access )<< endl;
 
 }
